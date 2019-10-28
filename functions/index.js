@@ -1,6 +1,8 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const uuidv5 = require('uuidv5')
+const uuidv5 = require('uuid/v5');
+const namespace = require('uuid/v1')()
+
 const cors = require('cors')({ origin: true });
 
 admin.initializeApp();
@@ -22,6 +24,6 @@ exports.addNewUser = functions.https.onRequest(async (req, res) => {
 exports.UserCreated = functions.database.ref("/users/{pushID}").onCreate((snapshot, context) => {
     const pushID = context.params.pushID;
 		const user = snapshot.val();
-		const id = uuidv5("null", pushID);
+		const id = uuidv5(pushID, namespace);
     return snapshot.ref.update({ id });
   });
